@@ -2,7 +2,7 @@
 
 A controlled experiment testing which budget-friendly LLMs can faithfully follow a persistent AI agent persona across multi-turn conversations.
 
-**Blog post:** [The raccoon test: which AI models actually follow a personality](https://kix.codes/the-raccoon-test-which-ai-models-actually-follow-a-personality/)
+**Blog post:** [The Raccoon Test](https://kix.codes/the-raccoon-test/)
 
 ## What this tests
 
