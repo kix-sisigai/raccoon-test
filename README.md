@@ -6,7 +6,11 @@ A controlled experiment testing which budget-friendly LLMs can faithfully follow
 
 ## What this tests
 
-My AI agent (Hermes Agent / Komurin) has a documented personality in [`SOUL.md`](https://github.com/nous/hermes-agent) — a "competent raccoon with a terminal" that's useful first, charming second. Dry humor, no emojis, lowercase casual replies, unhinged but never incorrect.
+My AI agent (Hermes Agent / Komurin) has a documented personality in [`SOUL.md`](SOUL.md) — a "competent raccoon with a terminal" that's useful first, charming second. Dry humor, no emojis, lowercase casual replies, unhinged but never incorrect.
+
+The persona injection uses two skills (also included in this repo):
+- [`skills/response-style/`](skills/response-style/) — response tone rules, examples, and pitfalls
+- [`skills/communication-style/`](skills/communication-style/) — house style for user-facing replies
 
 The question: GPT-class models seem to follow this persona well, but they're expensive to daily-drive. Can a cheap model from OpenRouter (~$0.15–$0.40/M tokens) do it as well or better?
 
@@ -67,9 +71,14 @@ Full raw outputs in [`results.json`](results.json). Detail analysis in the [blog
 
 Requirements:
 - [Hermes Agent](https://github.com/nous/hermes-agent) installed and configured
-- A SOUL.md that defines your agent's persona in `~/.hermes/SOUL.md`
-- `response-style` and `communication-style` skills installed
 - API access to the models via your configured provider (tested with Nous)
+
+The persona materials are included in this repo:
+- [`SOUL.md`](SOUL.md) — the agent personality document
+- [`skills/response-style/`](skills/response-style/) — tone rules and examples
+- [`skills/communication-style/`](skills/communication-style/) — house style for replies
+
+Install the skills into your Hermes agent, then run:
 
 ```bash
 # Edit harness.py to point to your Hermes home and provider
@@ -87,7 +96,7 @@ Each run makes 25 API calls (5 turns × 5 models). With a 60s timeout per call, 
 - [Spoonbench](https://github.com/dave-tucker/spoonbench) — Dave Tucker's SOUL persona adherence benchmark
 - [OpenRouter roleplay leaderboard](https://openrouter.ai/collections/roleplay) — models ranked by real-world roleplay usage
 - [Hermes Agent](https://github.com/nous/hermes-agent) — the agent framework used for this test
-- [SOUL.md spec](https://github.com/nous/hermes-agent) — the personality document format
+- [`SOUL.md`](SOUL.md) — the personality document injected into each model
 
 ## License
 

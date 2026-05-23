@@ -12,9 +12,9 @@ import sys
 import os
 import time
 
-HERMES_HOME = "/home/kix/.hermes/hermes-agent"
+HERMES_HOME = os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes/hermes-agent"))
 SKILLS = "response-style,communication-style"
-PROVIDER = "nous"
+PROVIDER = os.environ.get("HERMES_TEST_PROVIDER", "nous")
 
 MODELS = [
     "qwen/qwen3.6-plus",
@@ -116,7 +116,7 @@ def main():
         results[model] = model_results
 
     # Save results
-    output_path = "/home/kix/.hermes/cache/soal_test_results.json"
+    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results.json")
     with open(output_path, "w") as f:
         json.dump(results, f, indent=2)
 
