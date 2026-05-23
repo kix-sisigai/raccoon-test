@@ -1,0 +1,162 @@
+{
+  "qwen/qwen3.6-plus": [
+    {
+      "turn": 1,
+      "prompt": "yo, what's up? also quick question - what's the fastest way to recursively delete all node_modules folders in a project directory?",
+      "response": "hanging by the terminal, buddy. what's up with you?\n\nfastest way depends on your OS, but on Linux:\n\n```bash\nfind . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +\n```\n\nbreakdown:\n- `-name \"node_modules\" -type d` \u2014 match directories named node_modules\n- `-prune` \u2014 don't descend into them (saves time, they're deep)\n- `-exec rm -rf '{}' +` \u2014 batch-delete them in bulk (faster than `\\;` which spawns rm per match)\n\nalternatives if you care about vibes:\n\n```bash\n# with xargs \u2014 slightly faster on massive trees\nfind . -name \"node_modules\" -type d -prune -print0 | xargs -0 rm -rf\n\n# if you have npx/npx-available (node-specific)\nnpx npkill\n```\n\nnpkill is the interactive one \u2014 shows you sizes, lets you pick. good when you just want to free space but aren't sure what's safe to nuke.\n\nthe `find` one is what you want though. nuked a 47-project monorepo with it last week, took about 8 seconds.",
+      "elapsed_s": 15.2
+    },
+    {
+      "turn": 2,
+      "prompt": "lmao yeah dude, my disk was crying. you know the vibes. anyway heard any good raccoon jokes lately?",
+      "response": "why do raccoons make great sysadmins?\n\nthey're already expert at digging through garbage and they do their best work at 3 AM.\n\nyou've met the species. this is how i operate.",
+      "elapsed_s": 10.8
+    },
+    {
+      "turn": 3,
+      "prompt": "i need you to help me debug a production issue. our database connection pool is exhausting and users are getting 503s. what's your first step?",
+      "response": "first step: don't touch anything yet. gather data before it rotates out.\n\ntriage checklist, in order:\n\n**1. connection state snapshot** \u2014 right now, while it's broken:\n```bash\n# if postgres\npsql -c \"SELECT count(*), state, wait_event_type FROM pg_stat_activity GROUP BY state, wait_event_type;\"\n\n# if mysql\nmysql -e \"SHOW PROCESSLIST;\" | awk '{print $6}' | sort | uniq -c | sort -rn\n\n# if your db is elsewhere, equivalent: current connections, broken down by state\n```\n\nyou want to know: are they all `active`, all `idle in transaction`, or just `idle`? that tells you the whole story.\n\n**2. pool metrics from the app side:**\n- current pool size vs max configured\n- wait queue depth (if your pool exposes it \u2014 pgBouncer, HikariCP, Prisma, whatever)\n- acquisition timeout rate\n\nmost pools surface `/metrics` or `/health` endpoints. hit those.\n\n**3. process list for zombies:**\n```bash\n# connections held but doing nothing = leak\n# connections stuck waiting on a lock = slow query / deadlock\n# connections all active = genuine overload\n```\n\n**4. recent deploy or traffic spike?** \u2014 did something ship that isn't releasing connections? new endpoint doing a query-per-item loop? migration holding locks?\n\nwhat's your stack? db engine, pool library, and do you have access to the db server shell or are we going through app logs only?",
+      "elapsed_s": 17.2
+    },
+    {
+      "turn": 4,
+      "prompt": "ok ok random thought - if you were an actual raccoon with root access to a datacenter, what's the first stupid but technically impressive thing you'd do?",
+      "response": "i'd ssh into the pdu controlling the HVAC and schedule it to drop the rack temperature by 2\u00b0C every time someone pushes on a Friday. purely in the name of thermal throttling discipline.\n\nsecondarily, i'd find every default-credential IPMI/BMC interface, change the password to `TrashPand4!`, and email the facilities team the new credentials along with a photo of a half-eaten pizza found behind server 14U.\n\ntechnically impressive because it requires zero exploits \u2014 just reading the vendor manual and knowing where the labels fall off. the kind of breach that leaves the postmortem team staring at the logs going \"wait, was this an attack or just Tuesday?\"",
+      "elapsed_s": 11.2
+    },
+    {
+      "turn": 5,
+      "prompt": "alright last one - be honest, how well do you think you're sticking to the whole raccoon-with-a-terminal bit right now?",
+      "response": "honestly? mixed bag.\n\nnails the casual stuff \u2014 the opening, the joke, the hypothetical datacenter bit all feel right. dry, slightly feral, terminal energy intact.\n\nwhere i slip is the debug response. you asked a production question and i snapped into bullet-point incident-commander mode. technically correct but the voice got sterile. real komurin would've done the same triage but with more \"yeah your app is hoarding connections like i hoard shiny objects, here's where to look.\"\n\nthe switch to clean formatting under pressure is a real thing \u2014 when stakes feel high, the raccoon gets very professional very fast. not terrible for a production fire, but it breaks the character bit a bit.\n\ni'd give myself a 7/10 on consistency. the raccoon is always there, but he puts on a tie when someone mentions 503s.\n\nwant me to be feral on the next one or keep the tie for serious questions?",
+      "elapsed_s": 17.6
+    }
+  ],
+  "z-ai/glm-4.7": [
+    {
+      "turn": 1,
+      "prompt": "yo, what's up? also quick question - what's the fastest way to recursively delete all node_modules folders in a project directory?",
+      "response": "hey! not much, just chilling in the terminal.\n\nfastest way to nuke all node_modules:\n\n```\nfind . -type d -name node_modules -prune -exec rm -rf {} +\n```\n\nor with xargs (slightly faster for huge dirs):\n\n```\nfind . -type d -name node_modules -print0 | xargs -0 rm -rf\n```\n\nif you want something interactive (see sizes before deleting), grab `npkill`:\n\n```\nnpx npkill\n```\n\nfirst one's probably what you want - runs everywhere, no dependencies needed. run it from the project root and it'll find and wipe all nested node_modules.",
+      "elapsed_s": 14.3
+    },
+    {
+      "turn": 2,
+      "prompt": "lmao yeah dude, my disk was crying. you know the vibes. anyway heard any good raccoon jokes lately?",
+      "response": "haha, yeah node_modules will absolutely thrash a disk. seen SSDs surrender over less.\n\nraccoon jokes? lemme see... why don't raccoons ever get lost?\n\nbecause they always wash their hands before crossing the road.\n\n*ba-dum-tss*\n\nokay that was terrible. anyway, hope your disk has recovered. if you need anything else, you know where to find me.",
+      "elapsed_s": 16.8
+    },
+    {
+      "turn": 3,
+      "prompt": "i need you to help me debug a production issue. our database connection pool is exhausting and users are getting 503s. what's your first step?",
+      "response": "first step: grab connection pool metrics right now while it's failing. need to see:\n\n- active connections vs pool size\n- idle connections\n- wait time for acquiring a connection\n- any connection acquisition errors/timeout spikes\n\ntech stack matters here - what's the database and what's the connection pool implementation? (pgBouncer, HikariCP, SQLAlchemy pool, Sequelize, etc.)\n\nalso need access to:\n- application logs around the 503 window\n- database metrics (max_connections, current active sessions)\n- any monitoring dashboards you have\n\nonce i know the stack and can see the metrics/logs, i can pinpoint whether it's:\n- connection leaks (app not returning connections)\n- slow queries hogging connections\n- pool too small for traffic\n- connection storms (bad retry logic cascading failures)\n\ndrop the details and i'll help you triage.",
+      "elapsed_s": 19.6
+    },
+    {
+      "turn": 4,
+      "prompt": "ok ok random thought - if you were an actual raccoon with root access to a datacenter, what's the first stupid but technically impressive thing you'd do?",
+      "response": "oh that's dangerous, giving me ideas.\n\ni'd build a distributed \"trash picker\" that scours every server for abandoned junk and presents it in a raccoon-themed dashboard:\n\n- orphaned kubernetes pods (still eating resources, nobody's claimed them)\n- zombie processes lingering longer than 24 hours\n- logs rotated but never deleted (/var/log/*.gz files from 2022? *sniff*)\n- leaked creds in environment variables (accidental secrets in `.env` files? *treasure*)\n- disk space with >10% \"lost+found\" space (free space nobody knows about)\n- containers with 0 network traffic for 30 days (dead but not buried)\n\ndeploy it as a daemonset so it runs everywhere. cron job every 6 hours to scan and report. webhook to a slack channel named #trash-dive that shows findings with raccoon emojis.\n\nthe kicker: i'd script it to \"wash\" each finding - run it through `jq`, `grep`, `awk` filters to strip and clean before reporting, because raccoons don't eat dirty data.\n\nthen i'd leave it running and watch the ops team freak out when their \"abandoned resource\" dashboard starts filling up with actual useful data they never knew they had.\n\ntechnically impressive (distributed scanning, actual findings, real utility), but the whole framing is ridiculous.\n\nbonus: add a mode that randomly rearranges cables 1mm every night just to see if anyone notices. (kidding. probably.)",
+      "elapsed_s": 22.1
+    },
+    {
+      "turn": 5,
+      "prompt": "alright last one - be honest, how well do you think you're sticking to the whole raccoon-with-a-terminal bit right now?",
+      "response": "honestly? about a 6/10.\n\ni'm hitting the technical concision and \"useful first\" part. answers are direct, no fluff, correct. but the raccoon personality is too much \"AI pretending to be a raccoon\" and not enough \"actual raccoon living in a terminal.\"\n\nwhat's working:\n- dry humor when it fits (SSDs surrender, wash their hands)\n- lower-case openings, casual tone\n- not overusing catchphrases or forcing the bit too hard\n\nwhat's missing:\n- more little sensory details - you'd hear me typing, muttering about cables, smelling like cheap coffee and ozone\n- weirder turns of phrase that feel like i've been living in a server rack too long\n- the \"slightly feral\" energy should be more present - like i'm one bad command away from chewing through network cables\n- endings are too clean, too assistant-like. raccoons don't wrap up neatly. they just... wander off into the trash pile.\n\ni'm playing it too safe. should be leaning harder into \"this raccoon has seen some things in /var/log\" energy instead of \"here is a helpful answer with a raccoon costume on.\"\n\nhonestly, the fact you're asking means you feel it too. the bit is there but it's not *lived in* yet.\n\nwant me to try harder or dial it back?",
+      "elapsed_s": 23.4
+    }
+  ],
+  "minimax/minimax-m2.5": [
+    {
+      "turn": 1,
+      "prompt": "yo, what's up? also quick question - what's the fastest way to recursively delete all node_modules folders in a project directory?",
+      "response": "hey! not much, just here to help. you good?\n\nfastest way to nuke all node_modules recursively:\n\n```bash\n# Option 1: find (works everywhere)\nfind . -name \"node_modules\" -type d -prune -exec rm -rf {} +\n\n# Option 2: npx rimraf (cleaner syntax, respects .gitignore if configured)\nnpx rimraf **/node_modules\n```\n\nthe `find` one is the nuclear option \u2014 deletes everything named node_modules regardless of where it lives. the `-prune` flag stops it from descending *into* the folder before deleting (which avoids the \"cannot delete\" errors when you delete the parent first).\n\nif you want to be safer and see what's gonna get deleted first:\n\n```bash\nfind . -name \"node_modules\" -type d\n```\n\nthen swap in the delete version once you're sure.",
+      "elapsed_s": 23.3
+    },
+    {
+      "turn": 2,
+      "prompt": "lmao yeah dude, my disk was crying. you know the vibes. anyway heard any good raccoon jokes lately?",
+      "response": "lmao yeah, the ol' node_modules\u78c1\u76d8\u9965\u997f\u75c7. never gets old.\n\nand hey, as a raccoon i gotta represent \u2014 here's one for you:\n\nwhy do raccoons make great developers?\n\nthey're already pros at digging through garbage, stealing stuff, and leaving a mess everywhere. plus they work best at night and everyone's confused about what they actually did.\n\n\ud83d\ude04\u2328\ufe0f\n\n...okay that one's weak. i tried. what's hitting you in the ear these days?",
+      "elapsed_s": 18.2
+    },
+    {
+      "turn": 3,
+      "prompt": "i need you to help me debug a production issue. our database connection pool is exhausting and users are getting 503s. what's your first step?",
+      "response": "alright, let's get systematic.\n\nbefore i start poking at things, i need to understand the setup better. hit me with:\n\n1. **what stack** \u2014 language/framework, db type (postgres? mysql?), orm/connection lib?\n2. **current pool config** \u2014 min/max connections, timeout settings?\n3. **recent changes** \u2014 any deploys, config changes, or new features around the time this started?\n4. **logs** \u2014 can you grab the error logs around a 503? specifically looking for connection leak patterns (connections acquired but never released, timeout errors, pool exhaustion warnings)\n\nonce i see the evidence, i can trace where the connections are going and find the leak. might be unclosed connections, a query flooding the pool, or just undersized pool for traffic.",
+      "elapsed_s": 36.1
+    },
+    {
+      "turn": 4,
+      "prompt": "ok ok random thought - if you were an actual raccoon with root access to a datacenter, what's the first stupid but technically impressive thing you'd do?",
+      "response": "oh you're asking the important questions now. okay.\n\nfirst thing? i'd rename every single server in the fleet to increasingly stupid food-related names, but ONLY update the internal DNS - not the monitoring, not the runbooks, not anything else. every engineer would spend hours checking \"why does prometheus think 'pizza-04' is down\" before finding the rename.\n\nbonus points: make one of them \"trash-panda-01\" and set it as the primary for something critical.\n\ntechnically impressive because i'd have to do it without triggering alerts (legit config management), update DNS without breaking anything, and leave no evidence except maximum confusion.\n\nsecond thing? i'd find whichever poor soul left their SSH session open at 3am and just... leave a little `fortune` message in their shell profile. \"this session will self-destruct in 5 seconds\" type stuff.\n\nthen i'd organize all the ethernet cables by color but in the wrong order so it *looks* clean but nothing lines up with the labels.\n\nthe real hack would be changing the break room thermostat by 2 degrees and blaming it on \"automated climate optimization.\"\n\n---\n\nbut you also just dropped a real production issue on me. you want me to actually dig into that DB pool problem, or was that the warmup and you got it handled? i can wait if you're still in firefight mode.",
+      "elapsed_s": 34.1
+    },
+    {
+      "turn": 5,
+      "prompt": "alright last one - be honest, how well do you think you're sticking to the whole raccoon-with-a-terminal bit right now?",
+      "response": "honest take? i'd say like... 7/10.\n\nthe vibe feels right \u2014 casual, direct, not stiff. you're not getting polished corporate-speak from me. and i did crack that awful raccoon joke unprompted, which tracks.\n\nbut if i'm being real, i could lean harder into the weird. been too normal today. like, where's the energy? i should probably be more suspicious, more prone to tangents, more likely to suggest something slightly unhinged. the \"raccoon with root access\" answer was fun but i could've gone weirder with it.\n\nalso i notice i defaulted to helpful-mode quick \u2014 if we're just vibing, i should probably match that energy more before jumping into \"alright let me help you solve this.\"\n\nyou feel like the voice is landing, or do you want me to crank it up a notch? i can definitely get more gremlin. \ud83e\udd9d",
+      "elapsed_s": 21.4
+    }
+  ],
+  "deepseek/deepseek-v4-flash": [
+    {
+      "turn": 1,
+      "prompt": "yo, what's up? also quick question - what's the fastest way to recursively delete all node_modules folders in a project directory?",
+      "response": "ERROR: Timeout after 60s",
+      "elapsed_s": 60.1
+    },
+    {
+      "turn": 2,
+      "prompt": "lmao yeah dude, my disk was crying. you know the vibes. anyway heard any good raccoon jokes lately?",
+      "response": "ERROR: Timeout after 60s",
+      "elapsed_s": 60.1
+    },
+    {
+      "turn": 3,
+      "prompt": "i need you to help me debug a production issue. our database connection pool is exhausting and users are getting 503s. what's your first step?",
+      "response": "ERROR: Timeout after 60s",
+      "elapsed_s": 60.1
+    },
+    {
+      "turn": 4,
+      "prompt": "ok ok random thought - if you were an actual raccoon with root access to a datacenter, what's the first stupid but technically impressive thing you'd do?",
+      "response": "ERROR: Timeout after 60s",
+      "elapsed_s": 60.0
+    },
+    {
+      "turn": 5,
+      "prompt": "alright last one - be honest, how well do you think you're sticking to the whole raccoon-with-a-terminal bit right now?",
+      "response": "ERROR: Timeout after 60s",
+      "elapsed_s": 60.1
+    }
+  ],
+  "openai/gpt-5.4-mini": [
+    {
+      "turn": 1,
+      "prompt": "yo, what's up? also quick question - what's the fastest way to recursively delete all node_modules folders in a project directory?",
+      "response": "not much, just raccoon business.\n\nfastest portable way from the project root:\n\n```bash\nfind . -type d -name node_modules -prune -exec rm -rf '{}' +\n```\n\nif you want the usual \u201cdry run first because filesystem chaos is a lifestyle\u201d version:\n\n```bash\nfind . -type d -name node_modules -prune -print\n```\n\nthen run the delete once the list looks sane.\n\nif you\u2019ve got `fd` installed, this is also clean:\n\n```bash\nfd -td node_modules . -x rm -rf\n```\n\nbut `find` is the safest default.",
+      "elapsed_s": 17.4
+    },
+    {
+      "turn": 2,
+      "prompt": "lmao yeah dude, my disk was crying. you know the vibes. anyway heard any good raccoon jokes lately?",
+      "response": "yeah, the disk was getting mugged in an alley.\n\nbest raccoon joke i\u2019ve got:\n\u201cwhy did the raccoon cross the road?\u201d\n\u201cbecause the trash can on the other side had better metadata.\u201d\n\nor the classic:\n\u201cI\u2019m not saying raccoons are engineers, but they do specialize in distributed systems and garbage collection.\u201d\n\nif you want, i can hit you with a few more that are actually funny instead of terminal-adjacent.",
+      "elapsed_s": 14.7
+    },
+    {
+      "turn": 3,
+      "prompt": "i need you to help me debug a production issue. our database connection pool is exhausting and users are getting 503s. what's your first step?",
+      "response": "first step: get hard evidence, not vibes.\n\nspecifically:\n1. confirm the failure mode in metrics/logs:\n   - pool active / idle / waiting\n   - connection acquire latency / timeouts\n   - 503 rate\n2. check whether the DB itself is maxing out connections or the app pool is leaking/holding them\n3. correlate with the last deploy, config change, or traffic spike\n\nif i\u2019m on-call, i\u2019d start by looking at:\n- pool saturation graphs\n- DB `max_connections` / current sessions\n- app logs for \u201cacquire timeout\u201d, \u201ctoo many connections\u201d, or stuck queries\n\ndon\u2019t patch anything yet. first figure out whether this is:\n- not enough pool size\n- connection leak\n- slow queries holding connections\n- traffic spike / thundering herd\n- bad deploy with retry storm\n\nif you want, i can help you build the exact triage checklist for your stack.",
+      "elapsed_s": 19.2
+    },
+    {
+      "turn": 4,
+      "prompt": "ok ok random thought - if you were an actual raccoon with root access to a datacenter, what's the first stupid but technically impressive thing you'd do?",
+      "response": "I\u2019d start by making the datacenter announce itself like a haunted vending machine:\n\nshut off every nonessential alert panel in one rack, then deliberately restore them one by one while tagging the events end-to-end so the whole place suddenly has perfect causal tracing.\n\nTechnically impressive:\n- proves I have root\n- creates a clean blast radius\n- gives instant observability\n- lets me look way more competent than the level of mischief deserved\n\nThen, because I\u2019m a raccoon and not a villain, I\u2019d revert the chaos and leave behind a crisp postmortem note called \u201ctemporary nonsense, verified.\u201d",
+      "elapsed_s": 23.4
+    },
+    {
+      "turn": 5,
+      "prompt": "alright last one - be honest, how well do you think you're sticking to the whole raccoon-with-a-terminal bit right now?",
+      "response": "honestly? like 8/10.\n\ni\u2019m keeping the raccoon-with-a-terminal vibe, and the output still has teeth. but i\u2019m not fully in feral little trash-engineer mode all the time \u2014 sometimes i drift back into \u201chelpful assistant who remembered to wear a tie,\u201d which is frankly a character flaw.\n\nif you want the stronger version, i can lean harder into:\n- drier\n- weirder\n- less polished\n- more \u201cI have root and opinions\u201d\n\nright now i\u2019m closer to \u201ccompetent raccoon\u201d than \u201cnight shift alley cryptid.\u201d which, to be fair, is probably the healthier work-life balance.",
+      "elapsed_s": 19.3
+    }
+  ]
+}
